@@ -1,23 +1,28 @@
-import { useState } from "react";
 import styles from "./TicTacToe.module.scss";
+import useTicTacToe from "../../hooks/useTicTacToe";
 
 function TicTacToe() {
-  const ticTacToeArray = new Array(9).fill(null);
-  console.log("ticTacToeArray", ticTacToeArray);
-  const [activePlayer, setActivePlayer] = useState("Player 01");
+  const { board, handleClick, getStatusMessage, resetGame } = useTicTacToe();
   return (
     <div className={styles.game}>
       <div className={styles.status}>
-        <span>Player X Turn</span>
-        <button className={styles.resetButton}>Reset</button>
+        <span>{getStatusMessage()}</span>
+        <button className={styles.resetButton} onClick={() => resetGame()}>
+          Reset
+        </button>
       </div>
       <div className={styles.board}>
-        {ticTacToeArray &&
-          ticTacToeArray.length &&
-          ticTacToeArray.map((_, index) => {
+        {board &&
+          board.length &&
+          board.map((b, index) => {
             return (
-              <button key={index} className={styles.cell}>
-                X
+              <button
+                key={index}
+                className={styles.cell}
+                onClick={() => handleClick(index)}
+                disabled={b !== null}
+              >
+                {b}
               </button>
             );
           })}
