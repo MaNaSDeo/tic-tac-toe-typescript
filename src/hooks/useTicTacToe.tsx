@@ -1,12 +1,44 @@
 import { useState } from "react";
 type BoardValue = "X" | "O" | null;
 
-const initialBoard = (): BoardValue[] => Array(9).fill(null);
+const initialBoard = (num: number): BoardValue[] => Array(num * num).fill(null);
 
-const useTicTacToe = () => {
-  const [board, setBoard] = useState<BoardValue[]>(initialBoard());
+const useTicTacToe = (num: number) => {
+  const [board, setBoard] = useState<BoardValue[]>(initialBoard(num));
   const [isXNext, setIsXNext] = useState(true);
 
+  let WINNING_PATTERNS = Array();
+
+  for (let i = 0; i < num; i++) {
+    const rowPattern = [];
+    for (let j = 0; j < num; j++) {
+      rowPattern.push(i * num + j);
+    }
+    WINNING_PATTERNS.push(rowPattern);
+  }
+
+  for (let i = 0; i < num; i++) {
+    const colPattern = [];
+    for (let j = 0; j < num; j++) {
+      colPattern.push(i + j * num);
+    }
+    WINNING_PATTERNS.push(colPattern);
+  }
+  const digonal1 = [];
+  for (let i = 0; i < num; i++) {
+    digonal1.push((num + 1) * i);
+  }
+  WINNING_PATTERNS.push(digonal1);
+
+  const digonal2 = [];
+  for (let i = 0; i < num; i++) {
+    digonal2.push((num - 1) * (i + 1));
+  }
+  WINNING_PATTERNS.push(digonal2);
+
+  console.log("WINNING_PATTERNS", WINNING_PATTERNS);
+
+  /*
   const WINNING_PATTERNS = [
     [0, 1, 2],
     [3, 4, 5],
@@ -27,6 +59,20 @@ const useTicTacToe = () => {
         currentBoard[b] === currentBoard[c]
       ) {
         return currentBoard[a];
+      }
+    }
+    return null;
+  };
+  */
+  const calculateWinner = (currentBoard: BoardValue[]): BoardValue => {
+    for (let i = 0; i < WINNING_PATTERNS.length; i++) {
+      const pattern = WINNING_PATTERNS[i];
+      const firstValue = currentBoard[pattern[0]];
+      if (
+        firstValue &&
+        pattern.every((index: number) => currentBoard[index] === firstValue)
+      ) {
+        return firstValue;
       }
     }
     return null;
@@ -52,7 +98,7 @@ const useTicTacToe = () => {
   };
 
   const resetGame = () => {
-    setBoard(initialBoard());
+    setBoard(initialBoard(num));
     setIsXNext(true);
   };
 

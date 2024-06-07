@@ -3,7 +3,7 @@ import TicTacToe from "./Components/TicTacToe";
 function App() {
   return (
     <div className="app">
-      <TicTacToe />
+      <TicTacToe numRow={4} />
     </div>
   );
 }
